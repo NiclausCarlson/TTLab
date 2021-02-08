@@ -61,11 +61,19 @@ std::string Parser::next_token() {
     while (idx < expression.size()) {
         if (expression[idx] == '.') {
             token = ABSTRACTION;
+            has_lambda = false;
             if (expression[prev_idx] == '\\') ++prev_idx;
-            return expression.substr(prev_idx, idx++ - prev_idx);
+            return expression.substr(prev_idx, ++idx - prev_idx - 1);
         } else if (expression[idx] == '(') {
-            token = OPEN_BRACKET;
-            return expression.substr(prev_idx, ++idx - prev_idx);
+//            token = OPEN_BRACKET;
+//            return expression.substr(prev_idx, ++idx - prev_idx);
+            if (!isalpha(expression[prev_idx]) && !isdigit(expression[idx] && expression[idx] != '\'')) {
+                token = OPEN_BRACKET;
+                return expression.substr(prev_idx, idx++ - prev_idx);
+            } else {
+                token = VARIABLE;
+                return expression.substr(prev_idx, idx - prev_idx);
+            }
         } else if (expression[idx] == ')') {
             if (!isalpha(expression[prev_idx]) && !isdigit(expression[idx] && expression[idx] != '\'')) {
                 token = CLOSE_BRACKET;
@@ -74,11 +82,20 @@ std::string Parser::next_token() {
                 token = VARIABLE;
                 return expression.substr(prev_idx, idx - prev_idx);
             }
-        } else if (isblank(expression[idx]) || idx + 1 >= expression.size() ||
-                   (expression[idx] == '\\' && prev_idx < idx)) {
-            token = VARIABLE;
-            if (idx + 1 >= expression.size()) return expression.substr(prev_idx, idx++ - prev_idx + 1);
-            else return expression.substr(prev_idx, idx++ - prev_idx);
+        } else {
+            if (expression[idx] == '\\') {
+                has_lambda = true;
+                if (idx != prev_idx) {
+                    token = VARIABLE;
+                    return expression.substr(prev_idx, idx++ - prev_idx);
+                }
+            } else if (!has_lambda && isspace(expression[idx])
+                       || idx + 1 >= expression.size()
+                       || (expression[idx] == '\\' && prev_idx < idx)) {
+                token = VARIABLE;
+                if (idx + 1 >= expression.size()) return expression.substr(prev_idx, idx++ - prev_idx + 1);
+                else return expression.substr(prev_idx, idx++ - prev_idx);
+            }
         }
         ++idx;
     }

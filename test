@@ -43,50 +43,62 @@ a (\b.b \a.c)
 
 
 \n.\s.\z.s (n s z) \f.\x.f (f (f x))
+"\\n.\\s.\\z.s (n s z) \\f.\\x.f (f (f x))"
 (\n.(\s.(\z.((s ((n s) z)) (\f.(\x.(f (f (f x)))))))))
 
 
 \n.\s.\z.s (n s z) (\f.\x.f (f (f x)))
+"\\n.\\s.\\z.s (n s z) (\\f.\\x.f (f (f x)))"
 (\n.(\s.(\z.((s ((n s) z)) (\f.(\x.(f (f (f x)))))))))
 
 
 (\n.\s.\z.s (n s z)) (\f.\x.f (f (f x)))
+"(\\n.\\s.\\z.s (n s z)) (\\f.\\x.f (f (f x)))"
 ((\n.(\s.(\z.(s ((n s) z))))) (\f.(\x.(f (f (f x))))))
 
 
 \f.\x. (f (xx)) (f (xx))
+"\\f.\\x. (f (xx)) (f (xx))"
 (\f.(\x.((f xx) (f xx))))
 
 
 (((a a) a) a) a
+"(((a a) a) a) a"
 ((((a a) a) a) a)
 
 
 (a b) (a b) (a b) (a b) (a b)
+"(a b) (a b) (a b) (a b) (a b)"
 (((((a b) (a b)) (a b)) (a b)) (a b))
 
 
 \a.(a b) (a b) (a b) (a b) (a b)
+"\\a.(a b) (a b) (a b) (a b) (a b)"
 (\a.(((((a b) (a b)) (a b)) (a b)) (a b)))
 
 
 (\a.\b.a b c) (\a.\b.a b c) (\a.\b.a b c)
+"(\\a.\\b.a b c) (\\a.\\b.a b c) (\\a.\\b.a b c)"
 (((\a.(\b.((a b) c))) (\a.(\b.((a b) c)))) (\a.(\b.((a b) c))))
 
 
 (\a.a (\b.b (\c.c (a b c d))))
+"(\\a.a (\\b.b (\\c.c (a b c d))))"
 (\a.(a (\b.(b (\c.(c (((a b) c) d)))))))
 
 
 (a b)\a.(a b)
+"(a b)\\a.(a b)"
 ((a b) (\a.(a b)))
 
 
 (\a.(a b))\a.(\a.(a b))
+"(\\a.(a b))\\a.(\\a.(a b))"
 ((\a.(a b)) (\a.(\a.(a b))))
 
 
 (\a.(a\b.b))\a.(\a.(a b))
+"(\\a.(a\\b.b))\\a.(\\a.(a b))"
 ((\a.(a (\b.b))) (\a.(\a.(a b))))
 
 
@@ -95,43 +107,108 @@ a (\b.b \a.c)
 
 
 (\a.a\b.b)\a.(\a.(a b))
+"(\\a.a\\b.b)\\a.(\\a.(a b))"
 ((\a.(a (\b.b))) (\a.(\a.(a b))))
 
 
 a b c\b.a b c d e f
+"a b c\\b.a b c d e f"
 (((a b) c) (\b.(((((a b) c) d) e) f)))
 
 
 a b c\b.\c.a b c d e f
+"a b c\\b.\\c.a b c d e f"
 (((a b) c) (\b.(\c.(((((a b) c) d) e) f))))
 
 
 \a.a b c\b.\c.a b c d e f
+"\\a.a b c\\b.\\c.a b c d e f"
 (\a.(((a b) c) (\b.(\c.(((((a b) c) d) e) f)))))
 
 
 a ((d e) c (p q))
+"a ((d e) c (p q))"
 (a (((d e) c) (p q)))
 
 
 (f (e t y f))
+"(f (e t y f))"
 (f (((e t) y) f))
 
 
 ((e t y f) f)
+"((e t y f) f)"
 ((((e t) y) f) f)
 
 
 (\a.a a) (\b.b b)
+"(\\a.a a) (\\b.b b)"
 ((\a.(a a)) (\b.(b b)))
 
 
 \c.(\a.a a) (\b.b b)
+"\\c.(\\a.a a) (\\b.b b)"
 (\c.((\a.(a a)) (\b.(b b))))
 
 
 \a.\b.\c.\d.e
+"\\a.\\b.\\c.\\d.e"
 (\a.(\b.(\c.(\d.e))))
 
 
-a
+a b c e f
+((((a b) c) e) f)
+
+
+((a b) (a c) a\a.(d e a))
+"((a b) (a c) a\\a.(d e a))"
+((((a b) (a c)) a) (\a.((d e) a)))
+
+
+((a a\a.(d e a)) (a a\a.(d e a)) a\a.(d e a))
+"((a a\\a.(d e a)) (a a\\a.(d e a)) a\\a.(d e a))"
+(((((a a) (\a.((d e) a))) ((a a) (\a.((d e) a)))) a) (\a.((d e) a)))
+
+
+(a b c) a\a.\b.\c.\d.\e. (a b) (a b c) (\a.c d e)
+"(a b c) a\\a.\\b.\\c.\\d.\\e. (a b) (a b c) (\\a.c d e)"
+((((a b) c) a) (\a.(\b.(\c.(\d.(\e.(((a b) ((a b) c)) (\a.((c d) e)))))))))
+
+
+(a b c) c\a.a
+"(a b c) c\\a.a"
+((((a b) c) c) (\a.a))
+
+
+(a b c) (bb d) a (a a e) ((e e))
+"(a b c) (bb d) a (a a e) ((e e))"
+((((((a b) c) (bb d)) a) ((a a) e)) (e e))
+
+
+(a b c) (bb d) a ((a a e)) (((e e)))
+"(a b c) (bb d) a ((a a e)) (((e e)))"
+((((((a b) c) (bb d)) a) ((a a) e)) (e e))
+
+
+(t e r) a ((a b)) b c a (\a.bd (\ddda.df t))
+"(t e r) a ((a b)) b c a (\\a.bd (\\ddda.df t))"
+((((((((t e) r) a) (a b)) b) c) a) (\a.(bd (\ddda.(df t)))))
+
+
+(a b c) a\a.\b.((a b c) (bb d) a (a a e) ((e e)))
+"(a b c) a\\a.\\b.((a b c) (bb d) a (a a e) ((e e)))"
+((((a b) c) a) (\a.(\b.((((((a b) c) (bb d)) a) ((a a) e)) (e e)))))
+
+
+(\n.\m.\s.\z.n s (m s z)) (\s.\z.s (s (s z))) (\s.\z.s (s z)) (\n.\s.\z.s (n s z)) (\s.\z.z)
+"(\\n.\\m.\\s.\\z.n s (m s z)) (\\s.\\z.s (s (s z))) (\\s.\\z.s (s z)) (\\n.\\s.\\z.s (n s z)) (\\s.\\z.z)"
+(((((\n.(\m.(\s.(\z.((n s) ((m s) z)))))) (\s.(\z.(s (s (s z)))))) (\s.(\z.(s (s z))))) (\n.(\s.(\z.(s ((n s) z)))))) (\s.(\z.z)))
+
+
+(\f.(\x.f(xx))
+(\f. (\x. (f xx)))
+
+
+(\f.(\x.f(xx)) (\x.f(xx)))(\f.\x.(\p.\t.\e.pte)((\n.n(\c.\a.\b.b)(\a.\b.a))(x))(\s.\z.sz)((\n.\m.\s.n(ms))(x)(f((\n.\s.\z.(\p.p(\a.\b.b))(n(\p.(\a.\b.\t.tab)(s((\p.p(\a.\b.a))(p)))((\p.p(\a.\b.a))(p)))((\a.\b.\t.tab)(z)z)))(x)))))
+"(\\f.(\\x.f(xx)) (\\x.f(xx)))(\\f.\\x.(\\p.\\t.\\e.pte)((\\n.n(\\c.\\a.\\b.b)(\\a.\\b.a))(x))(\\s.\\z.sz)((\\n.\\m.\\s.n(ms))(x)(f((\\n.\\s.\\z.(\\p.p(\\a.\\b.b))(n(\\p.(\\a.\\b.\\t.tab)(s((\\p.p(\\a.\\b.a))(p)))((\\p.p(\\a.\\b.a))(p)))((\\a.\\b.\\t.tab)(z)z)))(x)))))"
+((\f.((\x.(f xx)) (\x.(f xx)))) (\f.(\x.((((\p.(\t.(\e.pte))) ((\n.((n (\c.(\a.(\b.b)))) (\a.(\b.a)))) x)) (\s.(\z.sz))) (((\n.(\m.(\s.(n ms)))) x) (f ((\n.(\s.(\z.((\p.(p (\a.(\b.b)))) ((n (\p.(((\a.(\b.(\t.tab))) (s ((\p.(p (\a.(\b.a)))) p))) ((\p.(p (\a.(\b.a)))) p)))) (((\a.(\b.(\t.tab))) z) z)))))) x)))))))

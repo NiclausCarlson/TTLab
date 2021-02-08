@@ -46,6 +46,7 @@ private:
     std::string expression;
     std::string cur_str;
     Token token, prev_token;
+    bool has_lambda = false;
 
     void skip_whitespace();
 
