@@ -1,0 +1,137 @@
+\a.\b.a b c (\d.e \f.g) h
+(\a.(\b.((((a b) c) (\d.(e (\f.g)))) h)))
+
+
+\a.\b.a (\d.e r) h
+(\a.(\b.((a (\d.(e r))) h)))
+
+
+a (b c) d
+((a (b c)) d)
+
+
+\a.\b.a b c d e f j
+(\a.(\b.((((((a b) c) d) e) f) j)))
+
+
+\b.a b c (\d.e \f.g) h
+(\b.((((a b) c) (\d.(e (\f.g)))) h))
+
+
+a (\b.b \a.c)
+(a (\b.(b (\a.c))))
+
+
+(\b.b \a.c)
+(\b.(b (\a.c)))
+
+
+\b.b \a.c
+(\b.(b (\a.c)))
+
+
+((a\bbb.c)d)e f g
+(((((a (\bbb.c)) d) e) f) g)
+
+
+\f.\x.f (f (f x))
+(\f.(\x.(f (f (f x)))))
+
+
+\n.\s.\z.s (n s z)
+(\n.(\s.(\z.(s ((n s) z)))))
+
+
+\n.\s.\z.s (n s z) \f.\x.f (f (f x))
+(\n.(\s.(\z.((s ((n s) z)) (\f.(\x.(f (f (f x)))))))))
+
+
+\n.\s.\z.s (n s z) (\f.\x.f (f (f x)))
+(\n.(\s.(\z.((s ((n s) z)) (\f.(\x.(f (f (f x)))))))))
+
+
+(\n.\s.\z.s (n s z)) (\f.\x.f (f (f x)))
+((\n.(\s.(\z.(s ((n s) z))))) (\f.(\x.(f (f (f x))))))
+
+
+\f.\x. (f (xx)) (f (xx))
+(\f.(\x.((f xx) (f xx))))
+
+
+(((a a) a) a) a
+((((a a) a) a) a)
+
+
+(a b) (a b) (a b) (a b) (a b)
+(((((a b) (a b)) (a b)) (a b)) (a b))
+
+
+\a.(a b) (a b) (a b) (a b) (a b)
+(\a.(((((a b) (a b)) (a b)) (a b)) (a b)))
+
+
+(\a.\b.a b c) (\a.\b.a b c) (\a.\b.a b c)
+(((\a.(\b.((a b) c))) (\a.(\b.((a b) c)))) (\a.(\b.((a b) c))))
+
+
+(\a.a (\b.b (\c.c (a b c d))))
+(\a.(a (\b.(b (\c.(c (((a b) c) d)))))))
+
+
+(a b)\a.(a b)
+((a b) (\a.(a b)))
+
+
+(\a.(a b))\a.(\a.(a b))
+((\a.(a b)) (\a.(\a.(a b))))
+
+
+(\a.(a\b.b))\a.(\a.(a b))
+((\a.(a (\b.b))) (\a.(\a.(a b))))
+
+
+(\a1.(a2\b3.b))\a4.(\a5.(a6 b765))
+((\a1.(a2 (\b3.b))) (\a4.(\a5.(a6 b765))))
+
+
+(\a.a\b.b)\a.(\a.(a b))
+((\a.(a (\b.b))) (\a.(\a.(a b))))
+
+
+a b c\b.a b c d e f
+(((a b) c) (\b.(((((a b) c) d) e) f)))
+
+
+a b c\b.\c.a b c d e f
+(((a b) c) (\b.(\c.(((((a b) c) d) e) f))))
+
+
+\a.a b c\b.\c.a b c d e f
+(\a.(((a b) c) (\b.(\c.(((((a b) c) d) e) f)))))
+
+
+a ((d e) c (p q))
+(a (((d e) c) (p q)))
+
+
+(f (e t y f))
+(f (((e t) y) f))
+
+
+((e t y f) f)
+((((e t) y) f) f)
+
+
+(\a.a a) (\b.b b)
+((\a.(a a)) (\b.(b b)))
+
+
+\c.(\a.a a) (\b.b b)
+(\c.((\a.(a a)) (\b.(b b))))
+
+
+\a.\b.\c.\d.e
+(\a.(\b.(\c.(\d.e))))
+
+
+a
