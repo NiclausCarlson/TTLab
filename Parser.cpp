@@ -14,8 +14,6 @@ void Parser::skip_whitespace() {
 Node *Parser::parse_atom() {
     prev_token = token;
     std::string t = trim(next_token());
-    std::string cur_token = get_token(token);
-    std::string p_token = get_token(prev_token);
     cur_str = t;
     if (token == VARIABLE) return new Variable(t);
     if (token == OPEN_BRACKET) return parse_expression();
@@ -34,15 +32,10 @@ Node *Parser::parse_application() {
 
 Node *Parser::parse_expression() {
     Node *apl = parse_application();
-    std::string g;
-    if (apl != nullptr) g = apl->to_str();
-
     while (true) {
-        if (token == ABSTRACTION && !(prev_token == VARIABLE || prev_token == FINISHED_CLOSE_BRACKET)) {
-            Node *wtf = new Lambda(new Variable(cur_str), parse_expression());
-            std::string a = wtf->to_str();
-            return wtf;
-        } else if (token == ABSTRACTION && (prev_token == VARIABLE || prev_token == FINISHED_CLOSE_BRACKET))
+        if (token == ABSTRACTION && !(prev_token == VARIABLE || prev_token == FINISHED_CLOSE_BRACKET))
+            return new Lambda(new Variable(cur_str), parse_expression());
+        else if (token == ABSTRACTION && (prev_token == VARIABLE || prev_token == FINISHED_CLOSE_BRACKET))
             return new Application(apl, new Lambda(new Variable(cur_str), parse_expression()));
         if (token == CLOSE_BRACKET) token = FINISHED_CLOSE_BRACKET;
         return apl;
@@ -65,8 +58,6 @@ std::string Parser::next_token() {
             if (expression[prev_idx] == '\\') ++prev_idx;
             return expression.substr(prev_idx, ++idx - prev_idx - 1);
         } else if (expression[idx] == '(') {
-//            token = OPEN_BRACKET;
-//            return expression.substr(prev_idx, ++idx - prev_idx);
             if (!isalpha(expression[prev_idx]) && !isdigit(expression[idx] && expression[idx] != '\'')) {
                 token = OPEN_BRACKET;
                 return expression.substr(prev_idx, idx++ - prev_idx);
@@ -89,7 +80,7 @@ std::string Parser::next_token() {
                     token = VARIABLE;
                     return expression.substr(prev_idx, idx++ - prev_idx);
                 }
-            } else if (!has_lambda && isspace(expression[idx])
+            } else if ((!has_lambda && isspace(expression[idx]))
                        || idx + 1 >= expression.size()
                        || (expression[idx] == '\\' && prev_idx < idx)) {
                 token = VARIABLE;
