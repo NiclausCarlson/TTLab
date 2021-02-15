@@ -15,7 +15,7 @@ int main() {
     freopen("test.in", "r", stdin);
 #endif
 
-  //  std::ios_base::sync_with_stdio(false);
+
     input = getchar();
     while (input != -1) {
         if (input == '\n' || input == '\r') to_parse += ' ';

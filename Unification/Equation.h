@@ -10,7 +10,7 @@
 struct Equation {
     Type *left, *right;
     bool deleted = false;
-
+    bool used = false;
     Equation(Type *left, Type *right) : left(left), right(right) {};
 };
 
