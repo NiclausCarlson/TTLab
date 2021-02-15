@@ -1,9 +1,12 @@
+//
+// Created by Nik Carlson on 09.02.2021.
+//
 
-#include <iostream>
 #include "Parser/Parser.h"
+#include "Unification/Deducer.h"
+#include "Node/Lambda.h"
 
 int main() {
-
     Parser parser;
     char input;
     std::string to_parse;
@@ -12,7 +15,7 @@ int main() {
     freopen("test.in", "r", stdin);
 #endif
 
-    std::ios_base::sync_with_stdio(false);
+  //  std::ios_base::sync_with_stdio(false);
     input = getchar();
     while (input != -1) {
         if (input == '\n' || input == '\r') to_parse += ' ';
@@ -20,7 +23,7 @@ int main() {
         input = getchar();
     }
     Node *tree = parser.parse(to_parse);
-    std::cout << tree->to_str() << std::endl;
-
+    Deducer d;
+    d.print_proof(tree);
     return 0;
 }

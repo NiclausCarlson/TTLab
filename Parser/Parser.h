@@ -7,7 +7,7 @@
 
 #include<string>
 
-#include"Node/Node.h"
+#include"../Node/Node.h"
 
 class Parser {
 private:

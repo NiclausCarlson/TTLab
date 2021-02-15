@@ -3,9 +3,9 @@
 //
 
 #include "Parser.h"
-#include "Node/Variable.h"
-#include "Node/Lambda.h"
-#include "Node/Application.h"
+#include "../Node/Variable.h"
+#include "../Node/Lambda.h"
+#include "../Node/Application.h"
 
 void Parser::skip_whitespace() {
     while (idx < expression.size() && isspace(expression[idx])) ++idx;

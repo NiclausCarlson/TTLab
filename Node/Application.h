@@ -7,12 +7,17 @@
 
 #include "Node.h"
 
-class Application: virtual public Node{
+class Application : virtual public Node {
 private:
     Node *left, *right;
 public:
-    Application(Node* left, Node* right);
+    Application(Node *left, Node *right);
+
     std::string to_str() override;
+
+    Node *get_left();
+
+    Node *get_right();
 };
 
 
