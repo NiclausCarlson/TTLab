@@ -5,36 +5,40 @@
 #include "Deducer.h"
 #include <iostream>
 
-Type *Deducer::create_system(Node *tree, std::vector<Equation> &system) {
+Type *Deducer::create_system(Node *tree,
+                             std::vector<Equation> &system,
+                             std::map<std::string, Type *> &expressions_type) {
     if (typeid(*tree) == typeid(Variable)) {
-        auto var = dynamic_cast<Variable *>(tree);
-        std::string name = var->to_str();
+        std::string name = tree->to_str();
         int t = 0;
-        if (variables_type[name]) t = variables_type[name]->type_id;
+        if (expressions_type[name]) t = expressions_type[name]->type_id;
         if (t == 0) {
-            expressions_type[name] = variables_type[name] = new Type(type_idx);
+            expressions_type[name] = tree->type = new Type(type_idx);
             return new Type(type_idx++);
         } else {
             Type *type = new Type(t);
-            expressions_type[name] = type;
+            expressions_type[name] = tree->type = type;
             return type;
         }
     } else if (typeid(*tree) == typeid(Application)) {
         auto application = dynamic_cast<Application *>(tree);
-        Type *t1 = create_system(application->get_left(), system);
-        Type *t2 = create_system(application->get_right(), system);
+        std::map<std::string, Type *> left = expressions_type;
+        std::map<std::string, Type *> right = expressions_type;
+        Type *t1 = create_system(application->get_left(), system, left);
+        Type *t2 = create_system(application->get_right(), system, right);
         Type *type = new Type(t2, new Type(type_idx));
         expressions_type[application->to_str()] = type->right;
+        tree->type = type->right;
         system.emplace_back(t1, type);
         return new Type(type_idx++);
     } else if (typeid(*tree) == typeid(Lambda)) {
         auto lambda = dynamic_cast<Lambda *>(tree);
         auto var = dynamic_cast<Variable *>(lambda->get_var());
         std::string name = var->to_str();
-        Type *t1 = create_system(lambda->get_node(), system);
+        Type *t1 = create_system(lambda->get_node(), system, expressions_type);
         int t = 0;
         Type *type;
-        if (variables_type[name]) t = variables_type[name]->type_id;
+        if (expressions_type[name]) t = expressions_type[name]->type_id;
         if (t != 0) {
             Type *free_var_type = new Type(t);
             type = new Type(free_var_type, t1);
@@ -42,7 +46,7 @@ Type *Deducer::create_system(Node *tree, std::vector<Equation> &system) {
             expressions_type[lambda->to_str()] = type;
             return type;
         }
-        expressions_type[name] = variables_type[name] = new Type(type_idx);
+        expressions_type[name] = new Type(type_idx);
         type = new Type(new Type(type_idx++), t1);
         expressions_type[lambda->to_str()] = type;
         return type;
@@ -62,6 +66,8 @@ bool Deducer::solver(std::vector<Equation> &system) {
     while (true) {
         bool something_changed = false;
         std::vector<Equation> new_system;
+        for (auto i: system)std::cout << i.left->to_str() << " = " << i.right->to_str() << std::endl;
+        std::cout << std::endl;
         for (auto eq = system.begin(); eq != system.end(); ++eq) {
             if (!eq->deleted) {
                 if (!eq->left->is_var() && eq->right->is_var()) {
@@ -120,7 +126,8 @@ void Deducer::s0(Type *&t, std::map<int, Type *> &eq) {
 
 void Deducer::print_proof(Node *tree) {
     std::vector<Equation> system;
-    Type *t = create_system(tree, system);
+    std::map<std::string, Type *> expressions_type;
+    Type *t = create_system(tree, system, expressions_type);
     std::map<int, Type *> types;
     std::vector<Context> free_variables_context;
     std::set<std::string> in_context_checker;
@@ -128,45 +135,37 @@ void Deducer::print_proof(Node *tree) {
     std::vector<Context> new_context;
     if (system.empty()) {
         set_context(free_variables_context, non_free_variables, in_context_checker, tree);
-        print_proof(free_variables_context, new_context, in_context_checker, tree, 0);
+        print_proof(free_variables_context, new_context, tree, 0);
     } else if (solver(system)) {
         for (auto eq:system) if (!eq.deleted) types[eq.left->type_id] = eq.right;
-        for (auto p: variables_type) {
-            s0(p.second, types);
-            variables_type[p.first] = p.second;
-        }
-        for (auto p: expressions_type) {
-            s0(p.second, types);
-            expressions_type[p.first] = p.second;
-        }
+
         set_context(free_variables_context, non_free_variables, in_context_checker, tree);
-        print_proof(free_variables_context, new_context, in_context_checker, tree, 0);
+        print_proof(free_variables_context, new_context, tree, 0);
     } else std::cout << "Expression has no type\n";
 }
 
 void Deducer::print_proof(std::vector<Context> &free_variables_context,
                           std::vector<Context> &new_context,
-                          std::set<std::string> &in_context_checker,
                           Node *lambda,
                           int level) {
     for (int i = 0; i < level; ++i) std::cout << "*   ";
     print_context(free_variables_context, new_context);
     std::string name = lambda->to_str();
     if (typeid(*lambda) == typeid(Variable)) {
-        std::cout << name << " : " << expressions_type[name]->to_str() << " [rule #1]\n";
+        std::cout << name << " : " << " [rule #1]\n";
     } else if (typeid(*lambda) == typeid(Application)) {
-        std::cout << name << " : " << expressions_type[name]->to_str() << " [rule #2]\n";
+        std::cout << name << " : " << " [rule #2]\n";
         auto apl = dynamic_cast<Application *>(lambda);
-        print_proof(free_variables_context, new_context, in_context_checker, apl->get_left(), level + 1);
-        print_proof(free_variables_context, new_context, in_context_checker, apl->get_right(), level + 1);
+        print_proof(free_variables_context, new_context, apl->get_left(), level + 1);
+        print_proof(free_variables_context, new_context, apl->get_right(), level + 1);
     } else if (typeid(*lambda) == typeid(Lambda)) {
-        std::cout << name << " : " << expressions_type[name]->to_str() << " [rule #3]\n";
+        std::cout << name << " : " << " [rule #3]\n";
         auto abstr = dynamic_cast<Lambda *>(lambda);
         std::vector<Context> tmp_context;
         for (auto i: new_context) tmp_context.push_back(i);
         std::string var_name = abstr->get_var()->to_str();
-        tmp_context.emplace_back(abstr->get_var(), expressions_type[var_name]);
-        print_proof(free_variables_context, tmp_context, in_context_checker, abstr->get_node(), level + 1);
+//        tmp_context.emplace_back(abstr->get_var(), expressions_type[var_name]);
+        print_proof(free_variables_context, tmp_context, abstr->get_node(), level + 1);
     }
 }
 
@@ -178,7 +177,7 @@ void Deducer::set_context(std::vector<Context> &context,
         std::string var_name = lambda->to_str();
         if (non_free_variables.count(var_name) == 0) {
             in_context_checker.insert(var_name);
-            context.emplace_back(lambda, variables_type[var_name]);
+            context.emplace_back(lambda, lambda->type);
         }
     }
     auto l = dynamic_cast<Lambda *>(lambda);

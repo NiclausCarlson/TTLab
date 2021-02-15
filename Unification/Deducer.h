@@ -28,7 +28,9 @@ private:
 
     int type_idx = 1;
 
-    Type *create_system(Node *tree, std::vector<Equation> &system);
+    Type *create_system(Node *tree,
+                        std::vector<Equation> &system,
+                        std::map<std::string, Type *>& expressions_type);
 
     bool solver(std::vector<Equation> &system);
 
@@ -38,7 +40,6 @@ private:
 
     void print_proof(std::vector<Context> &free_variables_context,
                      std::vector<Context> &new_context,
-                     std::set<std::string> &in_context_checker,
                      Node *lambda,
                      int level);
 
@@ -49,8 +50,6 @@ private:
 
     static void print_context(std::vector<Context> &free_variables_context, std::vector<Context> &new_context);
 
-    std::map<std::string, Type *> variables_type;
-    std::map<std::string, Type *> expressions_type;
 public:
     void print_proof(Node *tree);
 };
