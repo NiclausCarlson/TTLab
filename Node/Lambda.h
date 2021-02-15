@@ -18,9 +18,9 @@ public:
 
     std::string to_str() override;
 
-    Node* get_var();
+    Node *&get_var();
 
-    Node* get_node();
+    Node *&get_node();
 };
 
 

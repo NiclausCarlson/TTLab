@@ -5,32 +5,27 @@
 #include "Deducer.h"
 #include <iostream>
 
-Type *Deducer::create_system(Node *tree,
+Type *Deducer::create_system(Node *&tree,
                              std::vector<Equation> &system,
                              std::map<std::string, Type *> &expressions_type) {
     if (typeid(*tree) == typeid(Variable)) {
         std::string name = tree->to_str();
         int t = 0;
         if (expressions_type[name]) t = expressions_type[name]->type_id;
-        if (t == 0) {
-            expressions_type[name] = tree->type = new Type(type_idx);
-            return new Type(type_idx++);
-        } else {
-            Type *type = new Type(t);
-            expressions_type[name] = tree->type = type;
-            return type;
-        }
+        if (t == 0) expressions_type[name] = tree->type = new Type(type_idx++);
+        else expressions_type[name] = tree->type = new Type(t);
+        return tree->type;
     } else if (typeid(*tree) == typeid(Application)) {
         auto application = dynamic_cast<Application *>(tree);
         std::map<std::string, Type *> left = expressions_type;
         std::map<std::string, Type *> right = expressions_type;
         Type *t1 = create_system(application->get_left(), system, left);
         Type *t2 = create_system(application->get_right(), system, right);
-        Type *type = new Type(t2, new Type(type_idx));
+        Type *type = new Type(t2, new Type(type_idx++));
         expressions_type[application->to_str()] = type->right;
         tree->type = type->right;
         system.emplace_back(t1, type);
-        return new Type(type_idx++);
+        return tree->type;
     } else if (typeid(*tree) == typeid(Lambda)) {
         auto lambda = dynamic_cast<Lambda *>(tree);
         auto var = dynamic_cast<Variable *>(lambda->get_var());

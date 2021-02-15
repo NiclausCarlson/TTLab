@@ -11,10 +11,10 @@ std::string Application::to_str() {
     return "(" + left->to_str() + " " + right->to_str() + ")";
 }
 
-Node *Application::get_left() {
+Node *&Application::get_left() {
     return left;
 }
 
-Node *Application::get_right() {
+Node *&Application::get_right() {
     return right;
 }

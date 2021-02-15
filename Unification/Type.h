@@ -2,6 +2,9 @@
 // Created by Nik Carlson on 09.02.2021.
 //
 
+#ifndef FIRSTTASK_TYPE_H
+#define FIRSTTASK_TYPE_H
+
 #include <string>
 
 struct Type {
@@ -21,3 +24,5 @@ struct Type {
         return left == nullptr && right == nullptr;
     }
 };
+
+#endif //FIRSTTASK_TYPE_H

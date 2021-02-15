@@ -13,11 +13,11 @@ std::string Lambda::to_str() {
     return str;
 }
 
-Node *Lambda::get_var() {
+Node *&Lambda::get_var() {
     return var;
 }
 
-Node *Lambda::get_node() {
+Node *&Lambda::get_node() {
     return node;
 }
 

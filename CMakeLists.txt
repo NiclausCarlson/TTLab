@@ -16,4 +16,5 @@ add_executable(FirstTask
         Node/Variable.h
         Unification/Deducer.cpp
         Unification/Deducer.h
-        Unification/Type.h Unification/Equation.h)
+        Unification/Type.h
+        Unification/Equation.h )

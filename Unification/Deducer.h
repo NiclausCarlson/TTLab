@@ -28,9 +28,9 @@ private:
 
     int type_idx = 1;
 
-    Type *create_system(Node *tree,
+    Type *create_system(Node *&tree,
                         std::vector<Equation> &system,
-                        std::map<std::string, Type *>& expressions_type);
+                        std::map<std::string, Type *> &expressions_type);
 
     bool solver(std::vector<Equation> &system);
 

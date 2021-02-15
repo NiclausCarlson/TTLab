@@ -5,8 +5,8 @@
 #ifndef FIRSTTASK_NODE_H
 #define FIRSTTASK_NODE_H
 
-#include <string>
 #include "../Unification/Type.h"
+#include <string>
 
 struct Node {
     virtual std::string to_str() = 0;

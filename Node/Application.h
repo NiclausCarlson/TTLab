@@ -15,9 +15,9 @@ public:
 
     std::string to_str() override;
 
-    Node *get_left();
+    Node *&get_left();
 
-    Node *get_right();
+    Node *&get_right();
 };
 
 
